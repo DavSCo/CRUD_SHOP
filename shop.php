@@ -19,7 +19,7 @@ $stmt = $dbh->prepare("SELECT * FROM produits");
 
 $stmt->execute();
 
-$user = $stmt->fetchAll() ;
+$products = $stmt->fetchAll() ;
 
 
 
@@ -52,21 +52,27 @@ $user = $stmt->fetchAll() ;
     <div class="bar"></div>
 </nav>
 <?php
-foreach ($user as $item) {
+foreach ($products as $item) {
 
 
 
 echo '<figure class="produit">';
-    echo '<img src="' . $item['image'] . '"' . '/>';
+    echo '<img src="upload/' . $item['image'] . '"' . '/>';
     echo '<figcaption>';
         echo '<h3>' . $item['name'] . '</h3>';
         echo '<p>' . $item['description'] . '</p>';
         echo '<div class="price">';
             echo  "$".$item['price'];
         echo '</div>';
-    echo '</figcaption><i class="ion-android-cart"></i>';
-    echo '<a href="#"></a>';
+    echo '</figcaption>';
+    //echo '<i class="ion-android-cart"></i>';
+    //echo '<a href="#"></a>';
+
+
+    echo '<form method="post" action="cart.php"> <input type="hidden" name="product" value=\''.json_encode($item).'\'>';
+    echo '<button  class="ion-android-cart"> </button> </form>';
 echo '</figure>';
+
 
 }
 ?>

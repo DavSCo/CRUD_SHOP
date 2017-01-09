@@ -1,6 +1,4 @@
-<?php
 
-?>
 
 
 <!DOCTYPE html>
@@ -17,7 +15,12 @@
     <ul class="topnav" id="myTopnav">
         <li><a href="shop.php">Shop</a></li>
         <li><a href="account.php">Mon Compte</a></li>
-        <li><a href="connexion.php">Connexion</a></li>
+        <?php if (!$_SESSION['l']) {
+           echo '<li><a href="connexion.php">Connexion</a></li>';
+
+}
+
+?>
         <li><a href="inscription.php">Inscription</a></li>
 
 

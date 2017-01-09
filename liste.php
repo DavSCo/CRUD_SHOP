@@ -64,9 +64,12 @@ require ('nav.php');
 
         <?php
 
-        $stmt = $dbh->prepare("SELECT * FROM produits");
+        $stmt = $dbh->prepare("SELECT * FROM produits WHERE user_id = :id");
 
-        $stmt->execute();
+
+        $stmt->execute([
+                ':id' => $_SESSION['user']['id']
+        ]);
 
         $user = $stmt->fetchAll() ;
 

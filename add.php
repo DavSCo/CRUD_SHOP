@@ -15,18 +15,37 @@ try {
     echo 'Connexion échouée : ' . $e->getMessage();
 }
 
-if (!empty($_POST["name"]) && !empty($_POST["description"]) && !empty($_POST["image"]) && !empty($_POST["price"])) {
+
+if (!empty($_POST["name"]) && !empty($_POST["description"])  && !empty($_POST["price"])) {
+
+    if (isset($_FILES['image'])) {
+
+        // echo $_FILES['nomDuInput']['name'] . '<br>'; // Nom du fichier
+        $finfo = finfo_open(FILEINFO_MIME_TYPE); // Vérifie le type MIME du fichier
+        $mime = finfo_file($finfo, $_FILES['image']['tmp_name']); // Regarde dans ce fichier le type MIME
+        finfo_close($finfo); // Fermeture de la lecture
+        $filename = explode('.', $_FILES['image']['name']); // Explosion du nom sur le point
+        $extension =  $filename[count($filename) - 1]; // L'extension du fichier
+        //echo $extension . ' ' . $mime;
+        if($extension == 'jpg' && $mime == 'image/jpeg'){
+            move_uploaded_file($_FILES['image']['tmp_name'],
+                'upload/' . $_FILES['image']['name']);
+        }
+    }
+
 // Preparer la requete et l'enregistrement pour le lancement
-    $stmt = $dbh->prepare("INSERT INTO `produits`( `name`, `description`, `image`, `price`) 
-VALUES (:name,:description,:image,:price)");
+    $stmt = $dbh->prepare("INSERT INTO `produits`( `name`, `description`, `image`, `price`, `user_id`) 
+VALUES (:name,:description,:image,:price, :id)");
 
 // Execute la requete -> retourne un boolean
     $stmt->execute([
         ':name' => $_POST['name'],
         ':description' => $_POST['description'],
-        ':image' => $_POST['image'],
-        ':price' => $_POST['price']
+        ':image' => $_FILES['image']['name'],
+        ':price' => $_POST['price'],
+        ':id' => $_SESSION['user']['id']
     ]);
+
 
     header('Location:liste.php');
 }
